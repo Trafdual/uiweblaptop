@@ -17,6 +17,7 @@ const Header = () => {
           src='https://cdn2.fptshop.com.vn/unsafe/150x0/filters:quality(100)/small/logo_main_3_0353466848.png'
           alt='Logo'
           className='header-logo'
+          onClick={() => navigate('/')} 
         />
         <button className='menu-button'>
           <FontAwesomeIcon icon={faBars} />

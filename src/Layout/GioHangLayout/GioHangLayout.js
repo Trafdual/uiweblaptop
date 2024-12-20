@@ -2,7 +2,7 @@ import './GioHangLayout.scss'
 import { useState, useEffect } from 'react'
 import { ModalNhapThongTin } from './ModalNhapThongTin'
 
-function GioHangLayout () {
+function GioHangLayout() {
   const [cart, setCart] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [productid, setProductid] = useState([]) // Lưu ID của sản phẩm được chọn
@@ -55,6 +55,18 @@ function GioHangLayout () {
     return selected[index] ? total + item.price : total // Chỉ cộng giá của sản phẩm được chọn
   }, 0)
 
+  // Xử lý xóa sản phẩm
+  const handleRemoveProduct = productId => {
+    const updatedCart = cart.filter(item => item._id !== productId)
+    setCart(updatedCart)
+    setProductid(productid.filter(id => id !== productId))
+    setSelected(new Array(updatedCart.length).fill(false)) // Cập nhật trạng thái checkbox
+    setSelectAll(false) // Bỏ chọn trạng thái "Tất cả"
+
+    // Cập nhật lại localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCart))
+  }
+
   return (
     <div style={{ marginTop: '70px' }}>
       <table className='tablenhap'>
@@ -74,6 +86,7 @@ function GioHangLayout () {
             <td className='tdnhap'>Ram</td>
             <td className='tdnhap'>Dung lượng</td>
             <td className='tdnhap'>Đơn giá</td>
+            <td className='tdnhap'>Hành động</td> {/* Cột thêm nút xóa */}
           </tr>
         </thead>
         <tbody className='tbodynhap'>
@@ -95,11 +108,19 @@ function GioHangLayout () {
                 <td>{c.ram}</td>
                 <td>{c.dungluong}</td>
                 <td>{c.price.toLocaleString()}</td>
+                <td>
+                  <button
+                    className='btn-xoa'
+                    onClick={() => handleRemoveProduct(c._id)}
+                  >
+                    Xóa
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan='7'>Không có sản phẩm nào</td>
+              <td colSpan='8'>Không có sản phẩm nào</td>
             </tr>
           )}
         </tbody>
